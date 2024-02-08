@@ -11,17 +11,22 @@ const Nav = () => {
           <h1 className="font-bold text-2xl text-dark_pink">Slon Blog</h1>
         </div>
       </Link>
-      <ul className="flex">
-        <Link href="/">
-          <li className="p-3 text-pink hover:text-dark_pink">HOME</li>
+      <div className="flex">
+        <ul className="flex">
+          <Link href="/">
+            <li className="p-3 text-pink hover:text-dark_pink">HOME</li>
+          </Link>
+          <Link href="/">
+            <li className="p-3 text-pink hover:text-dark_pink">HOME</li>
+          </Link>
+          <Link href="/">
+            <li className="p-3 text-pink hover:text-dark_pink">HOME</li>
+          </Link>
+        </ul>
+        <Link href="/login">
+          <h3 className="p-3 font-bold hover:text-dark_pink">Login</h3>
         </Link>
-        <Link href="/">
-          <li className="p-3 text-pink hover:text-dark_pink">HOME</li>
-        </Link>
-        <Link href="/">
-          <li className="p-3 text-pink hover:text-dark_pink">HOME</li>
-        </Link>
-      </ul>
+      </div>
     </nav>
   );
 };
