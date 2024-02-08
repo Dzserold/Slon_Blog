@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Caudex } from "next/font/google";
 import "./globals.css";
 import Nav from "@/lib/components/Nav";
 
-const inter = Inter({ subsets: ["latin"] });
+const caudex = Caudex({
+  weight: ["400", "700"],
+  style: "normal",
+  subsets: ["latin", "latin-ext"],
+});
 
 export const metadata: Metadata = {
   title: "Slon Blog",
@@ -17,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${caudex.className} bg-dark text-light`}>
         <Nav />
         {children}
       </body>

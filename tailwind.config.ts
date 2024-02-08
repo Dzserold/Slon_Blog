@@ -6,7 +6,16 @@ const config: Config = {
     "./src/lib/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  theme: {},
+  theme: {
+    colors: {
+      transparent: "transparent",
+      current: "currentColor",
+      dark: "#222831",
+      light: "#eeeeee",
+      dark_pink: "#BB4461",
+      pink: "#ff5da2",
+    },
+  },
   plugins: [],
 };
 export default config;
