@@ -14,6 +14,7 @@ const config: Config = {
       light: "#eeeeee",
       dark_pink: "#BB4461",
       pink: "#ff5da2",
+      black: "#333",
     },
   },
   plugins: [],

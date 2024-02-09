@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Caudex } from "next/font/google";
+import { Oswald } from "next/font/google";
 import "./globals.css";
 import Nav from "@/lib/components/Nav";
 
-const caudex = Caudex({
-  weight: ["400", "700"],
+const oswald = Oswald({
+  weight: ["300", "400", "500", "600", "700"],
   style: "normal",
   subsets: ["latin", "latin-ext"],
 });
@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${caudex.className} bg-dark text-light`}>
+      <body className={`${oswald.className} bg-dark text-light`}>
         <Nav />
         {children}
       </body>
