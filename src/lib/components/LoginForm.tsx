@@ -16,7 +16,7 @@ const LoginForm = () => {
         </button>
       </form>
       <h3 className="mt-3 text-sm font-light">
-        Don't have an account?
+        Don&apos;t have an account?
         <Link
           className="ml-1 text-base text-pink hover:text-dark_pink"
           href="/register"
