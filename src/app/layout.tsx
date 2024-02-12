@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
 import "./globals.css";
-import Nav from "@/lib/components/Nav";
+import Nav from "@/app/components/Nav";
 
 const oswald = Oswald({
   weight: ["300", "400", "500", "600", "700"],

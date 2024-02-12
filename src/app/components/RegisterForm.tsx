@@ -1,4 +1,4 @@
-import Input from "@/lib/components/Input";
+import Input from "@/app/components/Input";
 import Link from "next/link";
 
 const LoginForm = () => {
