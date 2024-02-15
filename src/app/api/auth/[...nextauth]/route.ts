@@ -11,7 +11,7 @@ const handler = NextAuth({
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: {},
+        email: {},
         password: {},
       },
       async authorize(credentials, req) {
@@ -31,3 +31,5 @@ const handler = NextAuth({
     }),
   ],
 });
+
+export { handler as GET, handler as POST };

@@ -7,6 +7,15 @@ import { FormEvent } from "react";
 export default function Page() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+      }),
+    });
+    console.log(response);
   }
 
   return (
@@ -18,7 +27,7 @@ export default function Page() {
       <form onSubmit={onSubmit} className="flex flex-col gap-3 text-dark">
         <Input placeholder="Email" type="email" name="email" />
         <Input placeholder="Password" type="password" name="password" />
-        <Input placeholder="Password" type="password" name="password" />
+
         <button
           type="submit"
           className="inline-block text-lg font-bold rounded-md bg-pink hover:bg-dark_pink"
