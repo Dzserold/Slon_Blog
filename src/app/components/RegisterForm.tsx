@@ -6,16 +6,20 @@ import { FormEvent } from "react";
 
 export default function Page() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify({
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-      }),
-    });
-    console.log(response);
+    try {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.get("email") as string,
+          password: formData.get("password") as string,
+        }),
+      });
+      await console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
