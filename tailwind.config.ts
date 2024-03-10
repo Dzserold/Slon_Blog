@@ -15,6 +15,7 @@ const config: Config = {
       dark_pink: "#BB4461",
       pink: "#ff5da2",
       black: "#333",
+      error: "#ff3333",
     },
   },
   plugins: [],
