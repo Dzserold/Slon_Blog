@@ -1,6 +1,5 @@
 "use client";
 
-import Input from "@/app/components/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -24,14 +23,11 @@ const FormSchema = z
       .string()
       .min(6, "Password must be at least 6 characters")
       .max(50, "Password must be at less than 50 characters"),
-    confirmPassword: z
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(50, "Password must be at less than 50 characters"),
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password and confirm password doesn't match",
-    path: ["password", "confirmPassword"],
+    path: ["confirmPassword"],
   });
 
 type InputType = z.infer<typeof FormSchema>;
@@ -61,9 +57,8 @@ export default function Page() {
         onSubmit={handleSubmit(registerUser)}
         className="flex flex-col gap-3 text-dark"
       >
-        <Input
-          placeholder="Username"
-          type="text"
+        <input
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
           {...register("userName")}
         />
         {errors.userName && (
@@ -71,18 +66,36 @@ export default function Page() {
             {errors.userName?.message}
           </p>
         )}
-        <Input placeholder="Email" type="email" name="email" />
-        <Input
-          placeholder="Password"
-          type="password"
-          name="password"
+        <input
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+          type="email"
+          {...register("email")}
         />
-        <Input
-          placeholder="Confirm Password"
+        {errors.email && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.email?.message}
+          </p>
+        )}
+        <input
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
           type="password"
-          name="confirmPassword"
+          {...register("password")}
         />
-
+        {errors.password && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.password?.message}
+          </p>
+        )}
+        <input
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+          type="password"
+          {...register("confirmPassword")}
+        />
+        {errors.confirmPassword && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.confirmPassword?.message}
+          </p>
+        )}
         <button
           type="submit"
           className="inline-block text-lg font-bold rounded-md bg-pink hover:bg-dark_pink"
