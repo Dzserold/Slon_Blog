@@ -1,4 +1,3 @@
-import Input from "@/app/components/Input";
 import Link from "next/link";
 
 const LoginForm = () => {
@@ -9,8 +8,17 @@ const LoginForm = () => {
         If you have an account already, please log in
       </h3>
       <form className="flex flex-col gap-3 text-dark">
-        <Input placeholder="Email" type="email" name="email" />
-        <Input placeholder="Password" type="password" name="password" />
+        <input
+          placeholder="Email"
+          type="email"
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+        />
+        <input
+          placeholder="Password"
+          type="password"
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+        />
+
         <button className="inline-block text-lg font-bold rounded-md bg-pink hover:bg-dark_pink">
           LOGIN
         </button>
