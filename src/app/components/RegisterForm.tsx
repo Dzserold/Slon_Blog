@@ -1,8 +1,9 @@
 "use client";
 
+import { registerUser } from "@/lib/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const FormSchema = z
@@ -44,9 +45,15 @@ export default function Page() {
     resolver: zodResolver(FormSchema),
   });
 
-  const registerUser = (data: InputType) => {
-    console.log(data);
+  const saveUser: SubmitHandler<InputType> = async (data) => {
+    try {
+      const result = await registerUser(data);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   return (
     <div className="flex flex-col items-center justify-center ">
       <h1 className="p-4 text-3xl font-bold">Register</h1>
@@ -54,10 +61,11 @@ export default function Page() {
         If you would like to create an account, please register
       </h3>
       <form
-        onSubmit={handleSubmit(registerUser)}
+        onSubmit={handleSubmit(saveUser)}
         className="flex flex-col gap-3 text-dark"
       >
         <input
+          placeholder="Username"
           className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
           {...register("userName")}
         />
@@ -67,6 +75,7 @@ export default function Page() {
           </p>
         )}
         <input
+          placeholder="Email"
           className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
           type="email"
           {...register("email")}
@@ -77,6 +86,7 @@ export default function Page() {
           </p>
         )}
         <input
+          placeholder="Password"
           className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
           type="password"
           {...register("password")}
@@ -87,6 +97,7 @@ export default function Page() {
           </p>
         )}
         <input
+          placeholder="Connfirm Password"
           className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
           type="password"
           {...register("confirmPassword")}
