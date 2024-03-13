@@ -1,11 +1,13 @@
+"use server";
+
 import { User } from "@prisma/client";
-import prisma from "./client";
+import { prisma } from "./client";
 
 export const registerUser = async (
   data: Omit<User, "id" | "createdAt" | "updatedAt">
 ) => {
   try {
-    const isEmailExist = await prisma.user.findUnique({
+    const isEmailExist = await prisma.user.findFirst({
       where: {
         email: data.email,
       },
