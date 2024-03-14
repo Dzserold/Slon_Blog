@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
-import "./globals.css";
-import Nav from "@/app/components/Nav";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./globals.css";
+import Nav from "@/app/components/Nav";
 
 const oswald = Oswald({
   weight: ["300", "400", "500", "600", "700"],

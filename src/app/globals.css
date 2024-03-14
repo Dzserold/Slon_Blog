@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --toastify-color-success: #222;
+  --toastify-color-warning: #222;
+  --toastify-color-error: #222;
+
+  --toastify-text-color-success: #07bc0c;
+  --toastify-text-color-warning: #f1c40f;
+  --toastify-text-color-error: #e74c3c;
+}

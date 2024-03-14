@@ -39,8 +39,6 @@ export default function Page() {
     register,
     handleSubmit,
     reset,
-    watch,
-    control,
     formState: { errors },
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
@@ -51,12 +49,12 @@ export default function Page() {
       const result = await registerUser(data);
       console.log(result);
       if (result.status === 200) {
-        toast.success(result.message);
+        toast.success(result.message, { theme: "colored" });
       } else {
-        toast.warning(result.message);
+        toast.warning(result.message, { theme: "colored" });
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", { theme: "colored" });
       console.error(error);
     }
   };
