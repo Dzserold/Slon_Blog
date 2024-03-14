@@ -19,10 +19,17 @@ export const registerUser = async (
       },
     });
 
-    if (isUserExist) return "This username already taken";
+    if (isUserExist)
+      return {
+        status: 400,
+        message: "This username already taken",
+      };
 
     if (isEmailExist)
-      return "User already exist with this email";
+      return {
+        status: 400,
+        message: "User already exist with this email",
+      };
 
     const response = await prisma.user.create({
       data: {
@@ -32,9 +39,9 @@ export const registerUser = async (
       },
     });
 
-    return "Successfully registered";
+    return { status: 200, message: "User created successfully" };
   } catch (error) {
     console.log(error);
-    return "Something went wrong";
+    return { status: 500, message: "Something went wrong" };
   }
 };

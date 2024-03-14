@@ -4,6 +4,7 @@ import { registerUser } from "@/lib/actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const FormSchema = z
@@ -49,7 +50,13 @@ export default function Page() {
     try {
       const result = await registerUser(data);
       console.log(result);
+      if (result.status === 200) {
+        toast.success(result.message);
+      } else {
+        toast.warning(result.message);
+      }
     } catch (error) {
+      toast.error("Something went wrong");
       console.error(error);
     }
   };
