@@ -1,10 +1,9 @@
 import Image from "next/image";
 import logo from "@/images/logo.svg";
 import Link from "next/link";
-import { auth } from "auth";
 
 const Nav = async () => {
-  const sesssion = await auth();
+  // const sesssion = await auth();
   return (
     <nav className="flex justify-between px-4 pt-1">
       <Link href="/">
@@ -21,9 +20,11 @@ const Nav = async () => {
         </div>
       </Link>
       <div className="flex">
-        {sesssion && sesssion.user ? (
+        {/* {sesssion && sesssion.user ? (
           <div>{sesssion.user?.email}</div>
-        ) : null}
+        ) : (
+          <div>NULL</div>
+        )} */}
         <ul className="flex">
           <Link href="/">
             <li className="p-3 text-pink hover:text-dark_pink">
