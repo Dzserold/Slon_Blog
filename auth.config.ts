@@ -1,12 +1,9 @@
 import type { NextAuthConfig } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/client";
 
 export const authConfig = {
   pages: {
     signIn: "/login",
   },
-  adapter: PrismaAdapter(prisma),
 
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
