@@ -7,6 +7,7 @@ export const registerUser = async (
   data: Omit<User, "id" | "createdAt" | "updatedAt">
 ) => {
   try {
+    // Check if user is already registered
     const isEmailExist = await prisma.user.findFirst({
       where: {
         email: data.email,
@@ -19,16 +20,10 @@ export const registerUser = async (
       },
     });
 
-    if (isUserExist)
+    if (isUserExist || isEmailExist)
       return {
         status: 400,
         message: "This username already taken",
-      };
-
-    if (isEmailExist)
-      return {
-        status: 400,
-        message: "User already exist with this email",
       };
 
     const response = await prisma.user.create({

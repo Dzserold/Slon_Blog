@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -28,19 +27,19 @@ const LoginForm = (props: Props) => {
     resolver: zodResolver(FormSchema),
   });
 
-  const logIn: SubmitHandler<InputType> = async (data) => {
-    console.log(data);
-    try {
-      const result = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
-      console.log(result);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const logIn: SubmitHandler<InputType> = async (data) => {
+  //   console.log(data);
+  //   try {
+  //     const result = await signIn("credentials", {
+  //       email: data.email,
+  //       password: data.password,
+  //       redirect: false,
+  //     });
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="flex flex-col items-center justify-center ">
@@ -48,10 +47,7 @@ const LoginForm = (props: Props) => {
       <h3 className="mb-3 text-sm font-light">
         If you have an account already, please log in
       </h3>
-      <form
-        onSubmit={handleSubmit(logIn)}
-        className="flex flex-col gap-3 text-dark"
-      >
+      <form className="flex flex-col gap-3 text-dark">
         <input
           {...register("email")}
           placeholder="Email"

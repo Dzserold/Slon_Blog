@@ -1,10 +1,6 @@
-import LoginForm from "@/app/components/LoginForm";
+import LoginForm from "@/app/login/LoginForm";
 
-interface Props {
-  callbackUrl?: string;
-}
-
-const page = (props: Props) => {
+const page = () => {
   return (
     <div>
       <LoginForm />
