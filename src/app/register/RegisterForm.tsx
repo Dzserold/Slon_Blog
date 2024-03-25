@@ -1,6 +1,6 @@
 "use client";
 
-import { registerUser } from "@/lib/actions";
+import { registerUser } from "@/lib/register";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,8 +14,8 @@ const FormSchema = z
       .min(2, "First Name must be at least 2 characters")
       .max(45, "First Name must be less than 45 characters")
       .regex(
-        new RegExp("^[a-zA-Z]+$"),
-        "No special character allowed!"
+        new RegExp("^[a-zA-Z0-9.@_-]+$"),
+        "This username is not valid"
       ),
     email: z
       .string()
