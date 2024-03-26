@@ -4,7 +4,7 @@ import {
   SessionData,
   defaultSession,
   sessionOptions,
-} from "./types";
+} from "./cookieConfig";
 import { cookies } from "next/headers";
 
 export const getSession = async () => {

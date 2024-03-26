@@ -1,6 +1,7 @@
 "use server";
 import { User } from "@prisma/client";
 import prisma from "./client";
+import bcrypt from "bcrypt";
 import { getSession } from "./functions";
 
 export const Login = async (
@@ -20,13 +21,34 @@ export const Login = async (
     };
 
   // Check if password correct
+  const isPassCorrect = bcrypt.compareSync(
+    data.password,
+    user.password
+  );
+
+  if (!isPassCorrect)
+    return {
+      status: 400,
+      message: "Invalid credentials",
+    };
+
+  try {
+    const session = await getSession();
+    session.userId = user.id.toString();
+    session.userName = user.userName;
+    session.isLoggedIn = true;
+
+    await session.save();
+
+    return {
+      status: 200,
+      message: "Successfull login",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: "Something went wrong",
+    };
+  }
 };
-
-// const session = await getSession();
-// session.userId = "1";
-// session.username = username;
-// session.isPro = isPro;
-// session.isLoggedIn = true;
-
-// await session.save();
-// redirect("/");
