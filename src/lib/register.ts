@@ -64,7 +64,11 @@ export const registerUser = async (
       },
     });
 
-    return { status: 200, message: "User created successfully" };
+    return {
+      status: 200,
+      message: "User created successfully",
+      email: response.email,
+    };
   } catch (error) {
     console.log(error);
     return { status: 500, message: "Something went wrong" };

@@ -1,8 +1,10 @@
 "use client";
 
+import { Login } from "@/lib/login";
 import { registerUser } from "@/lib/register";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -35,10 +37,10 @@ const FormSchema = z
 type InputType = z.infer<typeof FormSchema>;
 
 export default function Page() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
@@ -47,9 +49,18 @@ export default function Page() {
   const saveUser: SubmitHandler<InputType> = async (data) => {
     try {
       const result = await registerUser(data);
-      console.log(result);
       if (result.status === 200) {
         toast.success(result.message, { theme: "colored" });
+        // Login the user
+
+        const login = await Login({
+          email: result.email as string,
+          password: data.password,
+        });
+        if (login.status === 200) {
+          toast.success(login.message, { theme: "colored" });
+          router.push("/");
+        }
       } else {
         toast.warning(result.message, { theme: "colored" });
       }
