@@ -6,6 +6,7 @@ import {
   sessionOptions,
 } from "./cookieConfig";
 import { cookies } from "next/headers";
+import prisma from "./client";
 
 export const getSession = async () => {
   const session = await getIronSession<SessionData>(
@@ -18,4 +19,21 @@ export const getSession = async () => {
   }
 
   return session;
+};
+
+export const getUserData = async (userId: string) => {
+  const id = Number(userId);
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  const data = {
+    id: user?.id,
+    userName: user?.userName,
+    email: user?.email,
+  };
+
+  return data;
 };

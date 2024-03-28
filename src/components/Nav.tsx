@@ -7,7 +7,7 @@ const Nav = async () => {
   const session = await getSession();
 
   return (
-    <nav className="flex justify-between px-4 pt-1">
+    <nav className="flex justify-between items-center p-2 w-full">
       <Link href="/">
         <div className="flex items-center p-1">
           <Image
@@ -22,7 +22,7 @@ const Nav = async () => {
         </div>
       </Link>
       {session.isLoggedIn && (
-        <div className="p-2 text-3xl ">
+        <div className="p-2 text-3xl hidden sm:inline-block">
           Wellcome{" "}
           <span className="text-pink">{session.userName}</span>
         </div>
@@ -30,18 +30,13 @@ const Nav = async () => {
       <div className="flex">
         <ul className="flex">
           <Link href="/">
-            <li className="p-3 text-pink hover:text-dark_pink">
+            <li className="p-3 text-pink hover:text-dark_pink hidden sm:inline-block">
               HOME
             </li>
           </Link>
-          <Link href="/">
+          <Link href="/posts">
             <li className="p-3 text-pink hover:text-dark_pink">
-              HOME
-            </li>
-          </Link>
-          <Link href="/">
-            <li className="p-3 text-pink hover:text-dark_pink">
-              HOME
+              POSTS
             </li>
           </Link>
         </ul>
