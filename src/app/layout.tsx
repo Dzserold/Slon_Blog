@@ -3,7 +3,7 @@ import { Oswald } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
-import Nav from "@/app/components/Nav";
+import Nav from "@/components/Nav";
 
 const oswald = Oswald({
   weight: ["300", "400", "500", "600", "700"],

@@ -1,9 +1,11 @@
 import Image from "next/image";
 import logo from "@/images/logo.svg";
 import Link from "next/link";
+import { getSession } from "@/lib/functions";
 
 const Nav = async () => {
-  // const sesssion = await auth();
+  const session = await getSession();
+
   return (
     <nav className="flex justify-between px-4 pt-1">
       <Link href="/">
@@ -19,12 +21,13 @@ const Nav = async () => {
           </h1>
         </div>
       </Link>
+      {session.isLoggedIn && (
+        <div className="p-2 text-3xl ">
+          Wellcome{" "}
+          <span className="text-pink">{session.userName}</span>
+        </div>
+      )}
       <div className="flex">
-        {/* {sesssion && sesssion.user ? (
-          <div>{sesssion.user?.email}</div>
-        ) : (
-          <div>NULL</div>
-        )} */}
         <ul className="flex">
           <Link href="/">
             <li className="p-3 text-pink hover:text-dark_pink">
@@ -42,11 +45,19 @@ const Nav = async () => {
             </li>
           </Link>
         </ul>
-        <Link href="/login">
-          <h3 className="p-2 text-lg font-bold hover:text-dark_pink">
-            Login
-          </h3>
-        </Link>
+        {session.isLoggedIn ? (
+          <Link href={`/profile/${session.userId}`}>
+            <h3 className="p-2 text-lg font-bold hover:text-dark_pink">
+              Profile
+            </h3>
+          </Link>
+        ) : (
+          <Link href="/login">
+            <h3 className="p-2 text-lg font-bold hover:text-dark_pink">
+              Login
+            </h3>
+          </Link>
+        )}
       </div>
     </nav>
   );
