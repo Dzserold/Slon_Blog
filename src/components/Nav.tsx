@@ -1,7 +1,8 @@
 import Image from "next/image";
 import logo from "@/images/logo.svg";
 import Link from "next/link";
-import { getSession } from "@/lib/functions";
+import { getSession, logOut } from "@/lib/functions";
+import { LogoutForm } from "./Logout";
 
 const Nav = async () => {
   const session = await getSession();
@@ -41,11 +42,14 @@ const Nav = async () => {
           </Link>
         </ul>
         {session.isLoggedIn ? (
-          <Link href={`/profile/${session.userId}`}>
-            <h3 className="p-2 text-lg font-bold hover:text-dark_pink">
-              Profile
-            </h3>
-          </Link>
+          <div className="flex">
+            <Link href={`/profile/${session.userId}`}>
+              <h3 className="p-2 text-lg font-bold hover:text-dark_pink">
+                Profile
+              </h3>
+            </Link>
+            <LogoutForm />
+          </div>
         ) : (
           <Link href="/login">
             <h3 className="p-2 text-lg font-bold hover:text-dark_pink">

@@ -7,6 +7,7 @@ import {
 } from "./cookieConfig";
 import { cookies } from "next/headers";
 import prisma from "./client";
+import { revalidatePath } from "next/cache";
 
 export const getSession = async () => {
   const session = await getIronSession<SessionData>(
@@ -35,4 +36,10 @@ export const getUserData = async (userId: string) => {
   });
 
   return user;
+};
+
+export const logOut = async () => {
+  const session = await getSession();
+  session.destroy();
+  revalidatePath("/");
 };
