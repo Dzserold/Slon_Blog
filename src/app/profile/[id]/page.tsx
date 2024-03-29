@@ -1,4 +1,3 @@
-import prisma from "@/lib/client";
 import { getSession, getUserData } from "@/lib/functions";
 import Link from "next/link";
 
@@ -16,8 +15,8 @@ export default async function Home({
       <div className="max-w-lg p-4">
         <h2 className="p-3 text-2xl">
           This is{" "}
-          <span className="text-pink">{user.userName} </span>'s
-          profile page
+          <span className="text-pink">{user?.userName} </span>
+          &apos;s profile page
         </h2>
         {session.isLoggedIn && session.userId === id ? (
           <div>

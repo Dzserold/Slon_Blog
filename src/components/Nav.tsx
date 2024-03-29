@@ -22,12 +22,7 @@ const Nav = async () => {
           </h1>
         </div>
       </Link>
-      {session.isLoggedIn && (
-        <div className="p-2 text-3xl hidden sm:inline-block">
-          Wellcome{" "}
-          <span className="text-pink">{session.userName}</span>
-        </div>
-      )}
+
       <div className="flex">
         <ul className="flex">
           <Link href="/">
@@ -44,15 +39,15 @@ const Nav = async () => {
         {session.isLoggedIn ? (
           <div className="flex">
             <Link href={`/profile/${session.userId}`}>
-              <h3 className="p-2 text-lg font-bold hover:text-dark_pink">
-                Profile
+              <h3 className="p-2 text-xl font-bold hover:text-dark_pink">
+                {session.userName}
               </h3>
             </Link>
             <LogoutForm />
           </div>
         ) : (
           <Link href="/login">
-            <h3 className="p-2 text-lg font-bold hover:text-dark_pink">
+            <h3 className="p-2 text-lg font-bold hover:text-dark_pink ">
               Login
             </h3>
           </Link>
