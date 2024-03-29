@@ -27,13 +27,12 @@ export const getUserData = async (userId: string) => {
     where: {
       id,
     },
+    select: {
+      id: true,
+      userName: true,
+      email: true,
+    },
   });
 
-  const data = {
-    id: user?.id,
-    userName: user?.userName,
-    email: user?.email,
-  };
-
-  return data;
+  return user;
 };
