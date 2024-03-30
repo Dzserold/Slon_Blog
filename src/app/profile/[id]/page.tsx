@@ -22,12 +22,12 @@ export default async function Home({
           <div>
             <h3 className="py-4 text-base">
               You can manage your data here. If you would like to
-              change something on it, please click the "Edit"
-              button below
+              change something on it, please click the
+              &quot;Edit&quot; button below
             </h3>
             <h3 className="text-base">
-              You can add a new post by clicking the "NEW POST"
-              link
+              You can add a new post by clicking the &quot;NEW
+              POST&quot; link
             </h3>
           </div>
         ) : null}
