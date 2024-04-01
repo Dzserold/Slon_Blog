@@ -2,15 +2,13 @@
 import Image from "next/image";
 import plusImg from "@/images/plus.svg";
 import xImg from "@/images/x.svg";
-import { useEffect, useState } from "react";
 import { z } from "zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import {
+  SubmitHandler,
+  useForm,
+  useFieldArray,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-interface Input {
-  name: string;
-  value: string;
-}
 
 const FormSchema = z.object({
   title: z
@@ -21,56 +19,54 @@ const FormSchema = z.object({
     .string()
     .min(2, "Content should be at least 2 characters")
     .max(500, "Content  must be less than 500 characters"),
-  categories: z.array(
-    z
-      .string()
-      .nonempty({ message: "Category name is required" })
-      .min(2, "Category name must be at least 2 characters")
-  ),
+  categories: z
+    .array(
+      z.object({
+        name: z
+          .string()
+          .min(2, "Category name must be at least 2 characters")
+          .max(
+            20,
+            "Category name must be less than 20 characters"
+          ),
+      })
+    )
+    .nonempty(),
 });
 
 type InputType = z.infer<typeof FormSchema>;
 
 export default function Home() {
-  // Handle categories
-  const [inputs, setInputs] = useState<Input[]>([]);
-  const [counter, setCounter] = useState(0);
-
-  const handleAddClick = () => {
-    setInputs([...inputs, { name: `${counter}`, value: "" }]);
-    setCounter(counter + 1);
-  };
-
-  const handleRemoveClick = (index: number) => {
-    // Remove the item at the specified index
-
-    setInputs((prevState) =>
-      prevState.filter((item) => item.name !== index.toString())
-    );
-
-    // Unregister the removed input from React Hook Form
-    unregister(`categories.${index}`);
-
-    console.log(inputs);
-  };
-
   //Validate and handle Form publish
   const {
     register,
-    handleSubmit,
-    unregister,
     formState: { errors },
+    watch,
+    handleSubmit,
+    control,
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      title: "",
+      content: "",
+      categories: [
+        {
+          name: "",
+        },
+      ],
+    },
   });
 
   const publishPost: SubmitHandler<InputType> = async (data) => {
     console.log(data);
   };
 
-  useEffect(() => {
-    console.log(errors.categories);
-  }, [errors.categories]);
+  // Handle dynamic inputs
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "categories",
+  });
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -91,12 +87,12 @@ export default function Home() {
         )}
 
         <button
-          disabled={inputs.length === 9}
+          onClick={() => append({ name: "" })}
+          disabled={fields.length === 9}
           type="button"
           className={`${
-            inputs.length > 8 ? "bg-dark_pink" : "bg-pink"
+            fields.length > 8 ? "bg-dark_pink" : "bg-pink"
           } flex items-center self-center justify-center px-1 rounded-md w-60 `}
-          onClick={handleAddClick}
         >
           ADD NEW CATEGORY
           <Image
@@ -114,18 +110,18 @@ export default function Home() {
         )}
 
         <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
-          {inputs.slice(0, 9).map((input, index) => (
-            <div className="flex" key={input.name}>
+          {fields.slice(0, 9).map((field, index) => (
+            <div className="flex" key={field.id}>
               <input
                 key={index}
-                {...register(`categories.${Number(input.name)}`)}
+                {...register(`categories.${index}.name`)}
                 placeholder="Category"
                 type="text"
                 className="w-full px-3 py-1 mr-2 border-4 border-black rounded-md outline-none text-md focus:border-dark_pink"
               />
               <button
                 type="button"
-                onClick={() => handleRemoveClick(index)}
+                onClick={() => remove(index)}
               >
                 <Image
                   className="w-6"
