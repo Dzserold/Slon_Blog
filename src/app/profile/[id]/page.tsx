@@ -1,4 +1,4 @@
-import { getSession, getUserData } from "@/lib/functions";
+import { getSession, getUserData } from "@/lib/session";
 import Link from "next/link";
 
 export default async function Home({

@@ -9,6 +9,14 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createPost } from "@/lib/post";
+import { getUserDataClient } from "@/lib/session";
+
+interface User {
+  id: number;
+  userName: string;
+  email: string;
+}
 
 const FormSchema = z.object({
   title: z
@@ -33,7 +41,8 @@ const FormSchema = z.object({
     )
     .nonempty({
       message: "Post must have at least one category",
-    }),
+    })
+    .max(6, "Post must have maximum 6 categories"),
 });
 
 type InputType = z.infer<typeof FormSchema>;
@@ -58,16 +67,17 @@ export default function Home() {
     },
   });
 
-  const publishPost: SubmitHandler<InputType> = async (data) => {
-    console.log(data);
-  };
-
   // Handle dynamic inputs
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "categories",
   });
+
+  const publishPost: SubmitHandler<InputType> = async (data) => {
+    const session = await getUserDataClient();
+    const res = await createPost(data, session as User);
+    console.log(res);
+  };
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -107,6 +117,11 @@ export default function Home() {
         {errors.categories?.message && (
           <p className="mt-2 italic text-md text-error">
             {errors.categories?.message}
+          </p>
+        )}
+        {errors.categories?.root && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.categories?.root.message}
           </p>
         )}
 

@@ -38,6 +38,24 @@ export const getUserData = async (userId: string) => {
   return user;
 };
 
+export const getUserDataClient = async () => {
+  const session = await getSession();
+  if (!session.isLoggedIn) return null;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(session.userId),
+    },
+    select: {
+      id: true,
+      userName: true,
+      email: true,
+    },
+  });
+
+  return user;
+};
+
 export const logOut = async () => {
   const session = await getSession();
   session.destroy();

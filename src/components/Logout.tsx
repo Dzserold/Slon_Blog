@@ -1,4 +1,4 @@
-import { logOut } from "@/lib/functions";
+import { logOut } from "@/lib/session";
 
 export const LogoutForm = () => {
   return (

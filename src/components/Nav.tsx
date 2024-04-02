@@ -1,7 +1,7 @@
 import Image from "next/image";
 import logo from "@/images/logo.svg";
 import Link from "next/link";
-import { getSession, logOut } from "@/lib/functions";
+import { getSession } from "@/lib/session";
 import { LogoutForm } from "./Logout";
 
 const Nav = async () => {

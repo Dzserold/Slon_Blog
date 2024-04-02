@@ -2,13 +2,13 @@
 import { User } from "@prisma/client";
 import prisma from "./client";
 import bcrypt from "bcrypt";
-import { getSession } from "./functions";
+import { getSession } from "./session";
 
 export const Login = async (
   data: Omit<User, "userName" | "id" | "createdAt" | "updatedAt">
 ) => {
   //Check if user exist
-  const user = await prisma.user.findFirst({
+  const user = await prisma.user.findUnique({
     where: {
       email: data.email,
     },
