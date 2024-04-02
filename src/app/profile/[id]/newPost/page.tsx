@@ -31,7 +31,9 @@ const FormSchema = z.object({
           ),
       })
     )
-    .nonempty(),
+    .nonempty({
+      message: "Post must have at least one category",
+    }),
 });
 
 type InputType = z.infer<typeof FormSchema>;
@@ -41,7 +43,6 @@ export default function Home() {
   const {
     register,
     formState: { errors },
-    watch,
     handleSubmit,
     control,
   } = useForm<InputType>({
@@ -103,7 +104,7 @@ export default function Home() {
             width={30}
           />
         </button>
-        {errors.categories && (
+        {errors.categories?.message && (
           <p className="mt-2 italic text-md text-error">
             {errors.categories?.message}
           </p>
@@ -111,26 +112,33 @@ export default function Home() {
 
         <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
           {fields.slice(0, 9).map((field, index) => (
-            <div className="flex" key={field.id}>
-              <input
-                key={index}
-                {...register(`categories.${index}.name`)}
-                placeholder="Category"
-                type="text"
-                className="w-full px-3 py-1 mr-2 border-4 border-black rounded-md outline-none text-md focus:border-dark_pink"
-              />
-              <button
-                type="button"
-                onClick={() => remove(index)}
-              >
-                <Image
-                  className="w-6"
-                  src={xImg}
-                  alt="X icon"
-                  height={40}
-                  width={40}
+            <div className="flex flex-col" key={field.id}>
+              <div className="flex ">
+                <input
+                  key={index}
+                  {...register(`categories.${index}.name`)}
+                  placeholder="Category"
+                  type="text"
+                  className="w-full px-3 py-1 mr-2 border-4 border-black rounded-md outline-none text-md focus:border-dark_pink"
                 />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => remove(index)}
+                >
+                  <Image
+                    className="w-6"
+                    src={xImg}
+                    alt="X icon"
+                    height={40}
+                    width={40}
+                  />
+                </button>
+              </div>
+              {errors.categories && errors.categories[index] && (
+                <p className="text-error ">
+                  {errors.categories[index]?.name?.message}
+                </p>
+              )}
             </div>
           ))}
         </div>

@@ -7,7 +7,7 @@ import {
 } from "./cookieConfig";
 import { cookies } from "next/headers";
 import prisma from "./client";
-import { revalidatePath } from "next/cache";
+import { permanentRedirect } from "next/navigation";
 
 export const getSession = async () => {
   const session = await getIronSession<SessionData>(
@@ -41,5 +41,5 @@ export const getUserData = async (userId: string) => {
 export const logOut = async () => {
   const session = await getSession();
   session.destroy();
-  revalidatePath("/");
+  permanentRedirect("/login");
 };
