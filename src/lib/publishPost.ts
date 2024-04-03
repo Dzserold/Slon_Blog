@@ -41,6 +41,7 @@ export const createPost = async (
   data: InputType,
   session: User
 ) => {
+  // Validate User and its Post data
   const isValid = FormSchema.safeParse(data);
   if (!isValid.success) {
     return {
@@ -55,18 +56,40 @@ export const createPost = async (
     },
   });
 
-  const userId = await prisma.user.findUnique({
-    where: {
-      id: session.id,
-    },
-  });
-
-  if (!user || !userId)
+  if (!user)
     return {
       status: 400,
       message: "Invalid credentials",
     };
 
-  console.log(user, userId);
-  return;
+  // Creating Post in DB
+  const categoriesData = data.categories.map((category) => {
+    return {
+      name: category.name,
+    };
+  });
+
+  try {
+    const res = await prisma.post.create({
+      data: {
+        title: data.title,
+        content: data.content,
+        authorName: session.userName,
+        authorId: session.id,
+        category: {
+          create: categoriesData,
+        },
+      },
+    });
+
+    return {
+      status: 200,
+      message: "Post created successfully",
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Something went wrong",
+    };
+  }
 };

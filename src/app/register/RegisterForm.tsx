@@ -36,7 +36,7 @@ const FormSchema = z
 
 type InputType = z.infer<typeof FormSchema>;
 
-export default function Page() {
+export default function RegisterForm() {
   const router = useRouter();
   const {
     register,

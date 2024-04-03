@@ -9,8 +9,9 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createPost } from "@/lib/post";
+import { createPost } from "@/lib/publishPost";
 import { getUserDataClient } from "@/lib/session";
+import { toast } from "react-toastify";
 
 interface User {
   id: number;
@@ -47,13 +48,14 @@ const FormSchema = z.object({
 
 type InputType = z.infer<typeof FormSchema>;
 
-export default function Home() {
+export default function createPostForm() {
   //Validate and handle Form publish
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
+    reset,
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -75,8 +77,15 @@ export default function Home() {
 
   const publishPost: SubmitHandler<InputType> = async (data) => {
     const session = await getUserDataClient();
-    const res = await createPost(data, session as User);
-    console.log(res);
+    const result = await createPost(data, session as User);
+
+    if (result.status === 200) {
+      toast.success(result.message, { theme: "colored" });
+      reset();
+    } else
+      toast.warning(result.message || "Something went wrong", {
+        theme: "colored",
+      });
   };
 
   return (
