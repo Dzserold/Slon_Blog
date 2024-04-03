@@ -1,8 +1,15 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
+import edit from "@/images/edit.svg";
+import Image from "next/image";
+
+interface User {
+  id: number;
+  userName: string;
+  email: string;
+}
 
 const FormSchema = z
   .object({
@@ -31,14 +38,24 @@ const FormSchema = z
 
 type InputType = z.infer<typeof FormSchema>;
 
-export default function EditForm({ id }: { id: string }) {
-  console.log(id);
+export default function EditForm({
+  id,
+  session,
+}: {
+  id: string;
+  session: User;
+}) {
+  console.log(session);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      userName: session.userName,
+      email: session.email,
+    },
   });
 
   const update: SubmitHandler<InputType> = async (data) => {
@@ -47,47 +64,90 @@ export default function EditForm({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col items-center justify-center ">
-      <h1 className="p-4 text-3xl font-bold">Register</h1>
+      <h1 className="p-4 text-3xl font-bold">Update</h1>
       <h3 className="mb-3 text-sm font-light">
-        If you would like to create an account, please register
+        You can update your profile. Click on the field you want
+        to change
       </h3>
       <form
         onSubmit={handleSubmit(update)}
         className="flex flex-col gap-3 text-dark"
       >
-        <input
-          placeholder="Username"
-          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
-          {...register("userName")}
-        />
+        <div className="flex items-center gap-1">
+          <input
+            disabled={true}
+            placeholder={session.userName}
+            contentEditable="false"
+            className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+            {...register("userName")}
+          />
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-md bg-pink"
+            type="button"
+          >
+            <Image
+              src={edit}
+              width={26}
+              height={26}
+              alt="edit"
+            />
+          </button>
+        </div>
         {errors.userName && (
           <p className="mt-2 italic text-md text-error">
             {errors.userName?.message}
           </p>
         )}
-        <input
-          placeholder="Email"
-          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
-          type="email"
-          {...register("email")}
-        />
+        <div className="flex items-center gap-1">
+          <input
+            disabled={true}
+            className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+            type="email"
+            {...register("email")}
+          />
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-md bg-pink"
+            type="button"
+          >
+            <Image
+              src={edit}
+              width={26}
+              height={26}
+              alt="edit"
+            />
+          </button>
+        </div>
         {errors.email && (
           <p className="mt-2 italic text-md text-error">
             {errors.email?.message}
           </p>
         )}
-        <input
-          placeholder="Password"
-          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
-          type="password"
-          {...register("password")}
-        />
+        <div className="flex items-center gap-1">
+          <input
+            placeholder="Password"
+            className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+            type="password"
+            {...register("password")}
+          />
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-md bg-pink"
+            type="button"
+          >
+            <Image
+              src={edit}
+              width={26}
+              height={26}
+              alt="edit"
+            />
+          </button>
+        </div>
         {errors.password && (
           <p className="mt-2 italic text-md text-error">
             {errors.password?.message}
           </p>
         )}
         <input
+          hidden={true}
           placeholder="Connfirm Password"
           className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
           type="password"
@@ -102,18 +162,9 @@ export default function EditForm({ id }: { id: string }) {
           type="submit"
           className="inline-block text-lg font-bold rounded-md bg-pink hover:bg-dark_pink"
         >
-          REGISTER
+          Update
         </button>
       </form>
-      <h3 className="mt-3 text-sm font-light">
-        Already have an account?
-        <Link
-          className="ml-1 text-base text-pink hover:text-dark_pink"
-          href="/login"
-        >
-          Login
-        </Link>
-      </h3>
     </div>
   );
 }
