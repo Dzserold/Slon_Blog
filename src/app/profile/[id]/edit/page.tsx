@@ -18,5 +18,5 @@ export default async function page({
   if (session?.id !== Number(params.id)) {
     return redirect("/login");
   }
-  return <EditForm id={params.id} session={session as User} />;
+  return <EditForm session={session as User} />;
 }

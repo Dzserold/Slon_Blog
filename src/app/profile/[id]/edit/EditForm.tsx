@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import edit from "@/images/edit.svg";
 import Image from "next/image";
+import { useState } from "react";
 
 interface User {
   id: number;
@@ -26,28 +27,46 @@ const FormSchema = z
       .email("Please enter a valid email address"),
 
     password: z
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(50, "Password must be at less than 50 characters"),
-    confirmPassword: z.string(),
+      .array(
+        z.object({
+          value: z
+            .string()
+            .min(6, "Password must be at least 6 characters")
+            .max(
+              50,
+              "Password must be at less than 50 characters"
+            ),
+        })
+      )
+      .nonempty()
+      .max(2),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Password and confirm password doesn't match",
-    path: ["confirmPassword"],
-  });
+  .refine(
+    (data) => {
+      if (data.password && data.password.length === 2) {
+        return data.password[0].value === data.password[1].value;
+      } else return true; // Allow empty or single-character passwords (optional)
+    },
+    {
+      message: "Password and confirm password doesn't match",
+      path: ["password"],
+    }
+  );
 
 type InputType = z.infer<typeof FormSchema>;
 
 export default function EditForm({
-  id,
   session,
 }: {
-  id: string;
   session: User;
 }) {
-  console.log(session);
+  const [usernameClosed, setUsernameClosed] = useState(true);
+  const [emailClosed, setEmailClosed] = useState(true);
+  const [newPassClosed, setNewPassClosed] = useState(true);
+
   const {
     register,
+
     handleSubmit,
     formState: { errors },
   } = useForm<InputType>({
@@ -55,6 +74,7 @@ export default function EditForm({
     defaultValues: {
       userName: session.userName,
       email: session.email,
+      password: [{ value: "" }],
     },
   });
 
@@ -66,8 +86,8 @@ export default function EditForm({
     <div className="flex flex-col items-center justify-center ">
       <h1 className="p-4 text-3xl font-bold">Update</h1>
       <h3 className="mb-3 text-sm font-light">
-        You can update your profile. Click on the field you want
-        to change
+        You can update your profile. Click on the the button by
+        the field you want to change
       </h3>
       <form
         onSubmit={handleSubmit(update)}
@@ -75,13 +95,14 @@ export default function EditForm({
       >
         <div className="flex items-center gap-1">
           <input
-            disabled={true}
+            disabled={usernameClosed}
             placeholder={session.userName}
             contentEditable="false"
             className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
             {...register("userName")}
           />
           <button
+            onClick={() => setUsernameClosed(!usernameClosed)}
             className="flex items-center justify-center w-8 h-8 rounded-md bg-pink"
             type="button"
           >
@@ -100,12 +121,13 @@ export default function EditForm({
         )}
         <div className="flex items-center gap-1">
           <input
-            disabled={true}
+            disabled={emailClosed}
             className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
             type="email"
             {...register("email")}
           />
           <button
+            onClick={() => setEmailClosed(!emailClosed)}
             className="flex items-center justify-center w-8 h-8 rounded-md bg-pink"
             type="button"
           >
@@ -122,15 +144,42 @@ export default function EditForm({
             {errors.email?.message}
           </p>
         )}
+
+        {errors.password?.root && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.password?.root?.message}
+          </p>
+        )}
+
+        <input
+          {...(!newPassClosed && {
+            ...register("password.1.value"),
+          })}
+          hidden={newPassClosed}
+          placeholder="New Password"
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+          type="password"
+        />
+        {errors.password?.[0] && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.password?.[0]?.value?.message}
+          </p>
+        )}
         <div className="flex items-center gap-1">
           <input
-            placeholder="Password"
+            {...register("password.0.value")}
+            placeholder="Connfirm Password"
             className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
             type="password"
-            {...register("password")}
           />
           <button
-            className="flex items-center justify-center w-8 h-8 rounded-md bg-pink"
+            disabled={!newPassClosed}
+            onClick={() => {
+              setNewPassClosed(false);
+            }}
+            className={`${
+              !newPassClosed ? "bg-dark_pink" : "bg-pink"
+            } flex items-center justify-center w-8 h-8 rounded-md `}
             type="button"
           >
             <Image
@@ -141,23 +190,7 @@ export default function EditForm({
             />
           </button>
         </div>
-        {errors.password && (
-          <p className="mt-2 italic text-md text-error">
-            {errors.password?.message}
-          </p>
-        )}
-        <input
-          hidden={true}
-          placeholder="Connfirm Password"
-          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
-          type="password"
-          {...register("confirmPassword")}
-        />
-        {errors.confirmPassword && (
-          <p className="mt-2 italic text-md text-error">
-            {errors.confirmPassword?.message}
-          </p>
-        )}
+
         <button
           type="submit"
           className="inline-block text-lg font-bold rounded-md bg-pink hover:bg-dark_pink"
