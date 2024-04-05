@@ -6,6 +6,7 @@ import edit from "@/images/edit.svg";
 import Image from "next/image";
 import { useState } from "react";
 import { updateProfile } from "@/lib/update";
+import { toast } from "react-toastify";
 
 interface User {
   id: number;
@@ -40,7 +41,6 @@ const FormSchema = z
   .refine(
     (data) => {
       if (data.password && data.password.length === 3) {
-        console.log(data.password.length);
         return data.password[1] === data.password[2];
       } else return true; // Allow empty or single-character passwords (optional)
     },
@@ -63,7 +63,7 @@ export default function EditForm({
 
   const {
     register,
-
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<InputType>({
@@ -81,7 +81,13 @@ export default function EditForm({
       ...formData,
     });
 
-    console.log(res);
+    if (res.status === 200) {
+      toast.success(res.message, { theme: "colored" });
+      reset();
+    } else if (res.status === 400) {
+      toast.warning(res.message, { theme: "colored" });
+    } else
+      toast.error("Something went wrong", { theme: "colored" });
   };
 
   return (
