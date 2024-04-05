@@ -1,17 +1,20 @@
 "use client";
 
-const page = async () => {
-  const newPost = async (e: any) => {
-    e.preventDefault();
+import { seedPost } from "@/lib/seed";
+import { getUserPosts } from "@/lib/userPosts";
+import { useEffect } from "react";
+
+const page = () => {
+  const getPosts = async () => {
+    const posts = await getUserPosts("20");
+    console.log(posts);
   };
 
-  return (
-    <div>
-      <form onSubmit={newPost}>
-        <button type="submit">Create</button>
-      </form>
-    </div>
-  );
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  return <div></div>;
 };
 
 export default page;

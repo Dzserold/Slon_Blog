@@ -1,4 +1,5 @@
 import { getSession, getUserData } from "@/lib/session";
+import { getUserPosts } from "@/lib/userPosts";
 import Link from "next/link";
 
 export default async function Home({
@@ -9,6 +10,8 @@ export default async function Home({
   const id = params.id;
   const session = await getSession();
   const user = await getUserData(id);
+
+  const posts = await getUserPosts(id);
 
   return (
     <section className="flex flex-col items-center gap-3 p-3 text-lg text-center">
@@ -60,6 +63,19 @@ export default async function Home({
             </button>
           </Link>
         ) : null}
+      </div>
+
+      <div>
+        <h2 className="p-3 text-2xl">Your Posts</h2>
+
+        <article className="grid grid-cols-3 gap-4">
+          {posts?.map((post) => (
+            <div className="bg-black" key={post.id}>
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
+            </div>
+          ))}
+        </article>
       </div>
     </section>
   );
