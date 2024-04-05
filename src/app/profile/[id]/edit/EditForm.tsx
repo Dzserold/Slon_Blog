@@ -5,6 +5,7 @@ import { z } from "zod";
 import edit from "@/images/edit.svg";
 import Image from "next/image";
 import { useState } from "react";
+import { updateProfile } from "@/lib/update";
 
 interface User {
   id: number;
@@ -16,8 +17,8 @@ const FormSchema = z
   .object({
     userName: z
       .string()
-      .min(2, "First Name must be at least 2 characters")
-      .max(45, "First Name must be less than 45 characters")
+      .min(2, "Username must be at least 2 characters")
+      .max(45, "Username  must be less than 45 characters")
       .regex(
         new RegExp("^[a-zA-Z0-9.@_-]+$"),
         "This username is not valid"
@@ -28,23 +29,19 @@ const FormSchema = z
 
     password: z
       .array(
-        z.object({
-          value: z
-            .string()
-            .min(6, "Password must be at least 6 characters")
-            .max(
-              50,
-              "Password must be at less than 50 characters"
-            ),
-        })
+        z
+          .string()
+          .min(6, "Password must be at least 6 characters")
+          .max(50, "Password must be at less than 50 characters")
       )
-      .nonempty()
-      .max(2),
+      .nonempty("You need to confirm with password")
+      .max(3),
   })
   .refine(
     (data) => {
-      if (data.password && data.password.length === 2) {
-        return data.password[0].value === data.password[1].value;
+      if (data.password && data.password.length === 3) {
+        console.log(data.password.length);
+        return data.password[1] === data.password[2];
       } else return true; // Allow empty or single-character passwords (optional)
     },
     {
@@ -74,12 +71,17 @@ export default function EditForm({
     defaultValues: {
       userName: session.userName,
       email: session.email,
-      password: [{ value: "" }],
+      password: [""],
     },
   });
 
-  const update: SubmitHandler<InputType> = async (data) => {
-    console.log(data);
+  const update: SubmitHandler<InputType> = async (formData) => {
+    const res = await updateProfile({
+      id: session.id,
+      ...formData,
+    });
+
+    console.log(res);
   };
 
   return (
@@ -93,6 +95,11 @@ export default function EditForm({
         onSubmit={handleSubmit(update)}
         className="flex flex-col gap-3 text-dark"
       >
+        {errors.userName && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.userName?.message}
+          </p>
+        )}
         <div className="flex items-center gap-1">
           <input
             disabled={usernameClosed}
@@ -114,9 +121,9 @@ export default function EditForm({
             />
           </button>
         </div>
-        {errors.userName && (
+        {errors.email && (
           <p className="mt-2 italic text-md text-error">
-            {errors.userName?.message}
+            {errors.email?.message}
           </p>
         )}
         <div className="flex items-center gap-1">
@@ -139,36 +146,15 @@ export default function EditForm({
             />
           </button>
         </div>
-        {errors.email && (
-          <p className="mt-2 italic text-md text-error">
-            {errors.email?.message}
-          </p>
-        )}
-
-        {errors.password?.root && (
-          <p className="mt-2 italic text-md text-error">
-            {errors.password?.root?.message}
-          </p>
-        )}
-
-        <input
-          {...(!newPassClosed && {
-            ...register("password.1.value"),
-          })}
-          hidden={newPassClosed}
-          placeholder="New Password"
-          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
-          type="password"
-        />
         {errors.password?.[0] && (
           <p className="mt-2 italic text-md text-error">
-            {errors.password?.[0]?.value?.message}
+            {"Enter your current password"}
           </p>
         )}
         <div className="flex items-center gap-1">
           <input
-            {...register("password.0.value")}
-            placeholder="Connfirm Password"
+            {...register("password.0")}
+            placeholder="Current Password"
             className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
             type="password"
           />
@@ -190,7 +176,39 @@ export default function EditForm({
             />
           </button>
         </div>
-
+        {errors.password?.root && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.password?.root?.message}
+          </p>
+        )}
+        {errors.password?.[1] && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.password?.[1]?.message}
+          </p>
+        )}
+        <input
+          {...(!newPassClosed && {
+            ...register("password.1"),
+          })}
+          hidden={newPassClosed}
+          placeholder="New Password"
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+          type="password"
+        />
+        {errors.password?.[2] && (
+          <p className="mt-2 italic text-md text-error">
+            {errors.password?.[2]?.message}
+          </p>
+        )}
+        <input
+          {...(!newPassClosed && {
+            ...register("password.2"),
+          })}
+          hidden={newPassClosed}
+          placeholder="Confirm Password"
+          className="px-3 py-1 border-4 border-black rounded-md outline-none w-72 text-md focus:border-dark_pink"
+          type="password"
+        />
         <button
           type="submit"
           className="inline-block text-lg font-bold rounded-md bg-pink hover:bg-dark_pink"
