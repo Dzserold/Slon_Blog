@@ -67,15 +67,6 @@ export default async function Home({
 
       <div>
         <h2 className="p-3 text-2xl">Your Posts</h2>
-
-        <article className="grid grid-cols-3 gap-4">
-          {posts?.map((post) => (
-            <div className="bg-black" key={post.id}>
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-            </div>
-          ))}
-        </article>
       </div>
     </section>
   );

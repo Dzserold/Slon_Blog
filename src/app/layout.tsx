@@ -23,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${oswald.className} bg-dark text-light`}>
+      <body
+        className={`${oswald.className} bg-dark text-light max-w-6xl mx-auto`}
+      >
         <Nav />
         <ToastContainer />
         {children}
