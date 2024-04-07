@@ -1,3 +1,4 @@
+import Posts from "@/components/Posts";
 import { getSession, getUserData } from "@/lib/session";
 import { getUserPosts } from "@/lib/userPosts";
 import Link from "next/link";
@@ -67,6 +68,7 @@ export default async function Home({
 
       <div>
         <h2 className="p-3 text-2xl">Your Posts</h2>
+        <Posts posts={posts} />
       </div>
     </section>
   );
