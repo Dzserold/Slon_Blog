@@ -12,3 +12,15 @@ export const getUserPosts = async (id: string) => {
   });
   return post;
 };
+
+export const getPostById = async (id: string) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      category: true,
+    },
+  });
+  return post;
+};
