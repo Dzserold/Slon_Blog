@@ -11,6 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getUserDataClient } from "@/lib/session";
 import { toast } from "react-toastify";
+import { editPost } from "@/lib/publishPost";
 
 interface User {
   id: number;
@@ -70,6 +71,7 @@ export default function EditPostForm({ post }: { post: Post }) {
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      // Insert existing data to inputs
       title: post.title,
       content: post.content,
       categories: [
@@ -88,21 +90,27 @@ export default function EditPostForm({ post }: { post: Post }) {
 
   const publishPost: SubmitHandler<InputType> = async (data) => {
     const session = await getUserDataClient();
+    console.log(session);
+    const result = await editPost(
+      post,
+      data as InputType,
+      session as User
+    );
 
-    console.log(data);
-    // const result =
-    // if (result.status === 200) {
-    //   toast.success(result.message, { theme: "colored" });
-    //   reset();
-    // } else
-    //   toast.warning(result.message || "Something went wrong", {
-    //     theme: "colored",
-    //   });
+    console.log(result);
+
+    if (result.status === 200) {
+      toast.success(result.message, { theme: "colored" });
+      reset();
+    } else
+      toast.warning(result.message || "Something went wrong", {
+        theme: "colored",
+      });
   };
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <h1 className="text-2xl">Making new Post</h1>
+      <h1 className="text-2xl">Editin Your Post</h1>
       <form
         onSubmit={handleSubmit(publishPost)}
         className="flex flex-col w-8/12 gap-3 text-dark"
@@ -120,11 +128,11 @@ export default function EditPostForm({ post }: { post: Post }) {
 
         <button
           onClick={() => append({ name: "" })}
-          disabled={fields.length === 9}
+          disabled={fields.length > 5}
           type="button"
           className={`${
-            fields.length > 8 ? "bg-dark_pink" : "bg-pink"
-          } flex items-center self-center justify-center px-1 rounded-md w-60 `}
+            fields.length > 5 ? "bg-dark_pink" : "bg-pink"
+          } hover:bg-dark_pink flex items-center self-center justify-center px-1 rounded-md w-60 `}
         >
           ADD NEW CATEGORY
           <Image

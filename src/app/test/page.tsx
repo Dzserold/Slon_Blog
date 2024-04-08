@@ -1,15 +1,9 @@
-import Posts from "@/components/Posts";
-import { getUserPosts } from "@/lib/userPosts";
-import Link from "next/link";
+import { seedPost } from "@/lib/seed";
 
 const page = async () => {
-  const posts = await getUserPosts("20");
+  const posts = await seedPost();
 
-  return (
-    <div>
-      <Posts posts={posts} />
-    </div>
-  );
+  return <div></div>;
 };
 
 export default page;

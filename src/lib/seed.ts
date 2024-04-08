@@ -16,7 +16,7 @@ export const seedPost = async () => {
         ],
       },
       author: {
-        connect: { id: 20 },
+        connect: { id: 1 },
       },
     },
   });

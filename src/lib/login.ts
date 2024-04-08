@@ -37,6 +37,7 @@ export const Login = async (
     session.userId = user.id.toString();
     session.userName = user.userName;
     session.isLoggedIn = true;
+    session.email = user.email;
 
     await session.save();
 

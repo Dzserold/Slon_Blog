@@ -12,8 +12,10 @@ export const sessionOptions: SessionOptions = {
 
 export interface SessionData {
   userId?: string;
+  email?: string;
   userName?: string;
-  isLoggedIn?: boolean;
+  isLoggedIn: boolean;
+
   //   isBlocked?: boolean;
 }
 

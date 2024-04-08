@@ -108,11 +108,11 @@ export default function PostForm() {
 
         <button
           onClick={() => append({ name: "" })}
-          disabled={fields.length === 9}
+          disabled={fields.length > 5}
           type="button"
           className={`${
-            fields.length > 8 ? "bg-dark_pink" : "bg-pink"
-          } flex items-center self-center justify-center px-1 rounded-md w-60 `}
+            fields.length > 5 ? "bg-dark_pink" : "bg-pink"
+          } hover:bg-dark_pink flex items-center self-center justify-center px-1 rounded-md w-60 `}
         >
           ADD NEW CATEGORY
           <Image
