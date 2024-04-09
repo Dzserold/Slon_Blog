@@ -63,14 +63,21 @@ export const createPost = async (
       message: "Invalid credentials",
     };
 
-  // Creating Post in DB
-  const categoriesData = data.categories.map((category) => {
-    return {
-      name: category.name,
-    };
+  // CHECK IF CATEGORIES EXIST AND MAKE TWO ARRAYS OF IT
+  const existingCategories = await prisma.category.findMany({
+    where: {
+      name: {
+        in: data.categories.map((category) => category.name),
+      },
+    },
   });
 
-  console.log(data.categories);
+  const newCategories = await data.categories.filter(
+    (category) =>
+      !existingCategories.some((c) => c.name === category.name)
+  );
+
+  //Push data to DB
   try {
     const res = await prisma.post.create({
       data: {
@@ -79,14 +86,8 @@ export const createPost = async (
         authorName: session.userName,
         authorId: session.id,
         category: {
-          connectOrCreate: {
-            where: {
-              name: categoriesData[0].name,
-            },
-            create: {
-              name: categoriesData[0].name,
-            },
-          },
+          connect: [...existingCategories],
+          create: [...newCategories],
         },
       },
     });
