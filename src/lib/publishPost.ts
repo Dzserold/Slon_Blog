@@ -17,7 +17,7 @@ const FormSchema = z.object({
   content: z
     .string()
     .min(2, "Content should be at least 2 characters")
-    .max(500, "Content  must be less than 500 characters"),
+    .max(5000, "Content  must be less than 5000 characters"),
   categories: z
     .array(
       z.object({
@@ -128,6 +128,9 @@ export const editPost = async (
     where: {
       id: post.id,
     },
+    include: {
+      category: true,
+    },
   });
 
   if (!user || !prevPost || prevPost.authorId !== user.id) {
@@ -136,21 +139,32 @@ export const editPost = async (
       message: "Action denied due authorization error",
     };
   }
+  // Check if post already have the categories
 
-  // Creating Post in DB
-  const categoriesData = data.categories.map((category) => {
-    return {
-      name: category.name,
-    };
+  // CHECK IF CATEGORIES EXIST AND MAKE TWO ARRAYS OF IT
+  const existingCategories = await prisma.category.findMany({
+    where: {
+      name: {
+        in: data.categories.map((category) => category.name),
+      },
+    },
   });
 
+  const newCategories = await data.categories.filter(
+    (category) =>
+      !existingCategories.some((c) => c.name === category.name)
+  );
+
   try {
-    const categor = await prisma.post.update({
+    // Delete all categories so we can make new fresh array later
+    const del = await prisma.post.update({
       where: {
         id: post.id,
       },
       data: {
-        category: {},
+        category: {
+          disconnect: [...prevPost.category],
+        },
       },
     });
 
@@ -163,17 +177,18 @@ export const editPost = async (
         title: data.title,
         content: data.content,
         category: {
-          create: categoriesData,
+          connect: [...existingCategories],
+          create: [...newCategories],
         },
       },
     });
 
     return {
-      categor,
       status: 200,
       message: "Post created successfully",
     };
   } catch (error) {
+    console.log(error);
     return {
       status: 500,
       message: "Something went wrong",

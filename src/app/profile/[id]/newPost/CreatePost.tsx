@@ -27,7 +27,7 @@ const FormSchema = z.object({
   content: z
     .string()
     .min(2, "Content should be at least 2 characters")
-    .max(500, "Content  must be less than 500 characters"),
+    .max(5000, "Content  must be less than 5000 characters"),
   categories: z
     .array(
       z.object({

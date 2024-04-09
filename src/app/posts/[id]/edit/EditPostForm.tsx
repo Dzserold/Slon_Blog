@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getUserDataClient } from "@/lib/session";
 import { toast } from "react-toastify";
 import { editPost } from "@/lib/publishPost";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: number;
@@ -39,7 +40,7 @@ const FormSchema = z.object({
   content: z
     .string()
     .min(2, "Content should be at least 2 characters")
-    .max(500, "Content  must be less than 500 characters"),
+    .max(5000, "Content  must be less than 5000 characters"),
   categories: z
     .array(
       z.object({
@@ -61,13 +62,13 @@ const FormSchema = z.object({
 type InputType = z.infer<typeof FormSchema>;
 
 export default function EditPostForm({ post }: { post: Post }) {
+  const router = useRouter();
   //Validate and handle Form publish
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
-    reset,
   } = useForm<InputType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -90,18 +91,16 @@ export default function EditPostForm({ post }: { post: Post }) {
 
   const publishPost: SubmitHandler<InputType> = async (data) => {
     const session = await getUserDataClient();
-    console.log(session);
+
     const result = await editPost(
       post,
       data as InputType,
       session as User
     );
 
-    console.log(result);
-
     if (result.status === 200) {
       toast.success(result.message, { theme: "colored" });
-      reset();
+      router.push("/");
     } else
       toast.warning(result.message || "Something went wrong", {
         theme: "colored",
