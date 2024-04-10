@@ -68,7 +68,7 @@ export default async function Home({
 
       <div>
         <h2 className="p-3 text-2xl">Your Posts</h2>
-        <Posts posts={posts} />c
+        <Posts posts={posts} />
       </div>
     </section>
   );

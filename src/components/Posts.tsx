@@ -1,3 +1,4 @@
+"use server";
 import { getSession } from "@/lib/session";
 import Link from "next/link";
 import rightArrow from "@/images/right_arrow.svg";

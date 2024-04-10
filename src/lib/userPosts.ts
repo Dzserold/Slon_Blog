@@ -24,3 +24,12 @@ export const getPostById = async (id: string) => {
   });
   return post;
 };
+
+export const getAllPosts = async () => {
+  const post = await prisma.post.findMany({
+    include: {
+      category: true,
+    },
+  });
+  return post;
+};

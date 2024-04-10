@@ -21,9 +21,14 @@ export default async function page({
         <div className="flex gap-2">
           {post?.category &&
             post.category.map((category) => (
-              <p className="bg-dark_pink rounded-md px-2">
-                {category.name}
-              </p>
+              <Link
+                href={`/category/${category.id}`}
+                key={category.id}
+              >
+                <p className="bg-dark_pink rounded-md px-2">
+                  {category.name}
+                </p>
+              </Link>
             ))}
         </div>
         <h3 className="text-light">{post?.content}</h3>

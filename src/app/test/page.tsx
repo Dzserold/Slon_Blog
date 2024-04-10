@@ -1,8 +1,6 @@
-"use client";
-import { seedPost } from "@/lib/seed";
-import { getPostById } from "@/lib/userPosts";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import PaginationControls from "@/components/PaginationControls";
+import Posts from "@/components/Posts";
+import { getAllPosts } from "@/lib/userPosts";
 
 interface Post {
   category: {
@@ -16,39 +14,30 @@ interface Post {
   authorName: string | null;
 }
 
-export default function page() {
-  const [post, setPost] = useState<Post | null>();
-  useEffect(() => {
-    const getPost = async () => {
-      const pos = await getPostById("31");
+export default async function page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const post = await getAllPosts();
 
-      setPost(pos);
-    };
-    getPost();
-  }, []);
+  const page = searchParams["page"] ?? "1";
+  const per_page = searchParams["per_page"] ?? "6";
 
-  console.log(post);
+  // mocked, skipped and limited in the real app
+  const start = (Number(page) - 1) * Number(per_page); // 0, 5, 10 ...
+  const end = start + Number(per_page); // 5, 10, 15 ...
+
+  const entries = post.slice(start, end);
 
   return (
-    <article className="flex gap-4 flex-col justify-center items-center px-3">
-      <h1 className="text-3xl">{post?.title}</h1>
-      <div className="flex gap-2">
-        {post?.category &&
-          post.category.map((category) => (
-            <p className="bg-dark_pink rounded-md px-2">
-              {category.name}
-            </p>
-          ))}
-      </div>
-      <h3 className="text-light">{post?.content}</h3>
-      <Link href={`/profile/${post?.authorId}`}>
-        <h4 className="hover:scale-110">
-          Written By:{" "}
-          <span className="text-dark_pink">
-            {post?.authorName}
-          </span>
-        </h4>
-      </Link>
-    </article>
+    <div>
+      <Posts posts={entries} />
+      <PaginationControls
+        hasNextPage={end < post.length}
+        hasPrevPage={start > 0}
+        length={post.length}
+      />
+    </div>
   );
 }
