@@ -19,10 +19,10 @@ export default async function page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const post = await getAllPosts();
+  const post = await getAllPosts(10, 10);
 
   const page = searchParams["page"] ?? "1";
-  const per_page = searchParams["per_page"] ?? "6";
+  const per_page = searchParams["per_page"] ?? "5";
 
   // mocked, skipped and limited in the real app
   const start = (Number(page) - 1) * Number(per_page); // 0, 5, 10 ...

@@ -25,8 +25,16 @@ export const getPostById = async (id: string) => {
   return post;
 };
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (
+  take: number,
+  skip: number
+) => {
   const post = await prisma.post.findMany({
+    take: take,
+    skip: skip,
+    orderBy: {
+      id: "asc",
+    },
     include: {
       category: true,
     },

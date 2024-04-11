@@ -18,20 +18,24 @@ const PaginationControls: FC<PaginationControlsProps> = ({
   const searchParams = useSearchParams();
 
   const page = searchParams.get("page") ?? "1";
-  const per_page = searchParams.get("per_page") ?? "6";
+  const per_page = searchParams.get("per_page") ?? "12";
 
   return (
-    <div className="flex gap-2">
+    <div className="flex justify-center gap-2 py-2">
       <button
-        className="bg-blue-500 text-white p-1"
+        className={`${
+          !hasPrevPage ? "bg-dark_pink" : "bg-pink"
+        } rounded-md text-dark text-white p-1 hover:scale-105`}
         disabled={!hasPrevPage}
         onClick={() => {
           router.push(
-            `test/?page=${Number(page) - 1}&per_page=${per_page}`
+            `posts/?page=${
+              Number(page) - 1
+            }&per_page=${per_page}`
           );
         }}
       >
-        prev page
+        Prev page
       </button>
 
       <div>
@@ -39,15 +43,19 @@ const PaginationControls: FC<PaginationControlsProps> = ({
       </div>
 
       <button
-        className="bg-blue-500 text-white p-1"
+        className={`${
+          !hasNextPage ? "bg-dark_pink" : "bg-pink"
+        } rounded-md text-white p-1 text-dark hover:scale-105`}
         disabled={!hasNextPage}
         onClick={() => {
           router.push(
-            `test/?page=${Number(page) + 1}&per_page=${per_page}`
+            `posts/?page=${
+              Number(page) + 1
+            }&per_page=${per_page}`
           );
         }}
       >
-        next page
+        Next page
       </button>
     </div>
   );
