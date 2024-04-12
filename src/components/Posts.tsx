@@ -19,9 +19,13 @@ interface Post {
 
 interface PostArray {
   posts: Post[];
+  tagId?: number;
 }
 
-export default async function Posts({ posts }: PostArray) {
+export default async function Posts({
+  posts,
+  tagId,
+}: PostArray) {
   const session = await getSession();
 
   return (
@@ -39,10 +43,16 @@ export default async function Posts({ posts }: PostArray) {
               return (
                 <Link
                   key={categor.id}
-                  href={`/categories/${categor.id}`}
+                  href={`/category/${categor.id}`}
                 >
-                  <h4 className="rounded-md bg-dark_pink hover:scale-105">
-                    {categor.name.slice(0, 10)}
+                  <h4
+                    className={`${
+                      tagId && tagId === categor.id
+                        ? "bg-dark text-error"
+                        : "bg-dark_pink"
+                    }  rounded-md hover:scale-105`}
+                  >
+                    {categor.name.slice(0, 9)}
                   </h4>
                 </Link>
               );

@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 
 const oswald = Oswald({
   weight: ["300", "400", "500", "600", "700"],
@@ -24,11 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${oswald.className} bg-dark text-light max-w-6xl mx-auto`}
+        className={`${oswald.className} bg-dark text-light min-h-screen max-w-6xl mx-auto flex justify-between flex-col`}
       >
         <Nav />
         <ToastContainer />
         {children}
+        <Footer />
       </body>
     </html>
   );
