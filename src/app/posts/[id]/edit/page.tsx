@@ -18,6 +18,6 @@ export default async function page({
 }: {
   params: { id: string };
 }) {
-  const post = await getPostById(params.id);
+  const post = await getPostById(Number(params.id));
   return <EditPostForm post={post as Post} />;
 }

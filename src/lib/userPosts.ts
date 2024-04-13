@@ -13,10 +13,10 @@ export const getUserPosts = async (id: string) => {
   return post;
 };
 
-export const getPostById = async (id: string) => {
+export const getPostById = async (id: number) => {
   const post = await prisma.post.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
     include: {
       category: true,

@@ -7,7 +7,7 @@ export default async function page({
 }: {
   params: { id: string };
 }) {
-  const post = await getPostById(params.id);
+  const post = await getPostById(Number(params.id));
 
   if (!post) {
     redirect("/posts");
@@ -16,7 +16,7 @@ export default async function page({
   return (
     <div>
       {" "}
-      <article className="flex gap-4 flex-col justify-center items-center px-3">
+      <article className="flex flex-col items-center justify-center gap-4 px-3">
         <h1 className="text-3xl">{post?.title}</h1>
         <div className="flex gap-2">
           {post?.category &&
@@ -25,7 +25,7 @@ export default async function page({
                 href={`/category/${category.id}`}
                 key={category.id}
               >
-                <p className="bg-dark_pink rounded-md px-2">
+                <p className="px-2 rounded-md bg-dark_pink">
                   {category.name}
                 </p>
               </Link>

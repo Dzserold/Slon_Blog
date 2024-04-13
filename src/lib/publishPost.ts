@@ -195,3 +195,8 @@ export const editPost = async (
     };
   }
 };
+
+export const countPostLength = async () => {
+  const data = await prisma.post.count();
+  return data;
+};
