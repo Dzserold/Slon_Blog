@@ -1,23 +1,57 @@
 "use server";
 import prisma from "./client";
 
-export const seedPost = async () => {
-  await prisma.post.create({
-    data: {
-      title: "Lorem ipsum dolor sit amet",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+interface Post {
+  category: {
+    id: number;
+    name: string;
+  }[];
 
-      category: {
-        connect: [
-          { name: "Lorem" },
-          { name: "Dolor" },
-          { name: "Dolores" },
-        ],
-      },
-      author: {
-        connect: { id: 1 },
+  title: string;
+  content: string;
+  authorId: number | null;
+  authorName: string | null;
+}
+
+export const createPostDumy = async (data: Post) => {
+  // CHECK IF CATEGORIES EXIST AND MAKE TWO ARRAYS OF IT
+  const existingCategories = await prisma.category.findMany({
+    where: {
+      name: {
+        in: data.category.map((category) => category.name),
       },
     },
   });
+
+  const newCategories = await data.category.filter(
+    (category) =>
+      !existingCategories.some((c) => c.name === category.name)
+  );
+
+  //Push data to DB
+  try {
+    const res = await prisma.post.create({
+      data: {
+        title: data.title,
+        content: data.content,
+        authorName: data.authorName,
+        authorId: data.authorId,
+        category: {
+          connect: [...existingCategories],
+          create: [...newCategories],
+        },
+      },
+    });
+
+    return {
+      status: 200,
+      message: "Post created successfully",
+    };
+  } catch (error) {
+    return {
+      error,
+      status: 500,
+      message: "Something went wrong",
+    };
+  }
 };
