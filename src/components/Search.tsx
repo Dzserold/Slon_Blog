@@ -1,8 +1,11 @@
 "use client";
-import { getAllPosts } from "@/lib/userPosts";
+import {
+  getAllPosts,
+  getPostsByQuery,
+  countPostLength,
+} from "@/lib/userPosts";
 import { useEffect, useState } from "react";
 import PostCard from "./PostCard";
-import { countPostLength } from "@/lib/publishPost";
 
 interface Post {
   category: {
@@ -21,14 +24,13 @@ export default function Search() {
     null
   );
   const [search, setSearch] = useState("");
-  const [data, setData] = useState<Post[] | null>();
   const [results, setResults] = useState<Post[] | null>();
 
+  // Gets a random post from DB
   const fetchRandomPost = async () => {
     const postLength = await countPostLength();
     const randNum = Math.floor(Math.random() * postLength);
     const data = await getAllPosts(1, randNum);
-    console.log(data);
     setRandomPost(data[0]);
   };
 
@@ -36,37 +38,20 @@ export default function Search() {
     fetchRandomPost();
   }, []);
 
-  const fetchData = async () => {
-    const posts = await getAllPosts(1000, 0);
-    setData(posts);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const filterPost = (searchtext: string) => {
-    const regex = new RegExp(searchtext, "i");
-
-    const found = data?.filter(
-      (search) =>
-        regex.test(search.title) ||
-        search.category.some((category) =>
-          regex.test(category.name)
-        )
-    );
-    return found;
-  };
-
-  //Handle input typing
-  useEffect(() => {
-    const searchResult = filterPost(search);
-
-    if (search === "" || search === "") {
+  // get posts based on query
+  const getPost = async (query: string) => {
+    if (search === "" || query === "" || query.length < 3) {
       setResults(null);
     } else {
-      setResults(searchResult);
+      const posts = await getPostsByQuery(query);
+      setResults(posts);
+      console.log(results);
     }
+  };
+
+  // Start looking for post based on usertyping
+  useEffect(() => {
+    getPost(search);
   }, [search]);
 
   return (
@@ -78,7 +63,7 @@ export default function Search() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {results ? (
+      {results && search.length > 2 ? (
         <article className="grid grid-cols-1 gap-2 px-3 md:grid-cols-2">
           {results.map((post, index) => {
             return (
@@ -88,7 +73,9 @@ export default function Search() {
         </article>
       ) : (
         randomPost && (
-          <PostCard post={randomPost} query={search} />
+          <div className="px-3">
+            <PostCard post={randomPost} query="" />
+          </div>
         )
       )}
     </section>

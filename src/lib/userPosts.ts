@@ -41,3 +41,39 @@ export const getAllPosts = async (
   });
   return post;
 };
+
+export const countPostLength = async () => {
+  const data = await prisma.post.count();
+  return data;
+};
+
+// gets the posts by title or category from db based on query
+export const getPostsByQuery = async (query: string) => {
+  const res = await prisma.post.findMany({
+    where: {
+      OR: [
+        {
+          title: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+        {
+          category: {
+            some: {
+              name: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  return res;
+};
