@@ -67,8 +67,7 @@ const dummyPosts1: Post[] = [
   },
   // Add more dummy posts as needed
 ];
-
-export const dummyPosts2: Post[] = [
+const dummyPosts2: Post[] = [
   {
     category: [
       { id: 5, name: "Health" },
@@ -96,7 +95,7 @@ export const dummyPosts2: Post[] = [
   // Add more dummy posts as needed
 ];
 
-export const dummyPosts: Post[] = [
+const dummyPosts: Post[] = [
   {
     category: [
       { id: 1, name: "Technology" },
@@ -122,7 +121,7 @@ export const dummyPosts: Post[] = [
     authorId: 5,
     authorName: "JaneDoe",
   },
-  // Add more dummy posts as needed
+  // Add more dummy posts as neededs
 ];
 
 export default async function page() {
