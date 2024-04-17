@@ -29,7 +29,7 @@ export default async function Posts({
   const session = await getSession();
 
   return (
-    <div className="grid grid-cols-2 gap-2 md:grid-cols-3 ">
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-3 px-2">
       {posts?.map((post) => (
         <article
           className="flex flex-col gap-2 p-1 bg-black rounded-md"

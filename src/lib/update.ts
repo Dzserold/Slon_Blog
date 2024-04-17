@@ -2,6 +2,7 @@
 import { z } from "zod";
 import prisma from "./client";
 import bcrypt from "bcrypt";
+import { getSession } from "./session";
 
 interface UserData {
   id: number;
@@ -92,15 +93,29 @@ export const updateProfile = async (data: UserData) => {
       },
     });
   } else {
-    const res = await prisma.user.update({
-      where: {
-        id: data.id,
-      },
-      data: {
-        userName: data.userName,
-        email: data.email,
-      },
-    });
+    try {
+      const res = await prisma.user.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          userName: data.userName,
+          email: data.email,
+        },
+      });
+
+      //Change data also in the session
+      const session = await getSession();
+      session.userName = res.userName;
+      session.email = res.email;
+
+      await session.save();
+    } catch (error) {
+      return {
+        status: 400,
+        message: "Invalid data",
+      };
+    }
   }
 
   return {

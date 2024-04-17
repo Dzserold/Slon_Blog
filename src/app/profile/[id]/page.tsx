@@ -51,14 +51,14 @@ export default async function Home({
       </div>
       <div>
         {session.isLoggedIn && session.userId === id ? (
-          <Link href={`/profile/${session.userId}/edit`}>
+          <Link href={`/profile/${id}/edit`}>
             <button className="inline-block px-4 py-1 mx-4 text-lg font-bold rounded-sm text-dark bg-pink hover:bg-dark_pink">
               Edit
             </button>
           </Link>
         ) : null}
         {session.isLoggedIn && session.userId === id ? (
-          <Link href={`/profile/${session.userId}/newPost`}>
+          <Link href={`/profile/${id}/newPost`}>
             <button className="p-3 text-pink hover:text-dark_pink">
               NEW POST
             </button>
